@@ -94,7 +94,7 @@ docker-compose up --build
 ```
 
 4. Access the application:
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3100
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
 
@@ -164,7 +164,7 @@ pnpm run dev
 ```
 
 2. Access the application:
-- Open http://localhost:3000 in your browser
+- Open http://localhost:3100 in your browser
 
 ### Environment Variables
 
