@@ -6,7 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8100:8100"
     volumes:
       - ./backend:/app
       - ./backend/data:/app/data
@@ -27,8 +27,8 @@ services:
       - /app/.next
       - pnpm-store:/pnpm
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-      - SERVER_API_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8100
+      - SERVER_API_URL=http://backend:8100
       - WATCHPACK_POLLING=true
       - NODE_ENV=development
     env_file:
