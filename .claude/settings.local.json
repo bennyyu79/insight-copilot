@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run python -c \"\ntry:\n    from backend.app.agent.graph import graph\n    print(''Graph compiled successfully with checkpointer:'', graph.checkpointer is not None)\n    print(''Graph name:'', graph.name)\nexcept Exception as e:\n    print(''Error:'', e)\n    import traceback\n    traceback.print_exc()\n\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

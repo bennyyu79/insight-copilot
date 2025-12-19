@@ -1,4 +1,5 @@
 import re
+import os
 from typing import List
 
 from IPython.display import Image, display
@@ -64,4 +65,19 @@ def load_chat_model(fully_specified_name: str) -> BaseChatModel:
         fully_specified_name (str): String in the format 'provider/model'.
     """
     provider, model = fully_specified_name.split("/", maxsplit=1)
+
+    # Check for OPENAILIKED environment variables for custom OpenAI-compatible API
+    openailiked_api_key = os.getenv("OPENAILIKED_API_KEY")
+    openailiked_base_url = os.getenv("OPENAILIKED_BASE_URL")
+
+    # Use OPENAILIKED credentials if available and provider is openai-compatible
+    if openailiked_api_key and provider in ["openai", "anthropic"]:
+        model_kwargs = {}
+        if openailiked_base_url:
+            model_kwargs["api_base"] = openailiked_base_url
+        if openailiked_api_key:
+            model_kwargs["api_key"] = openailiked_api_key
+
+        return init_chat_model(model, model_provider=provider, **model_kwargs)
+
     return init_chat_model(model, model_provider=provider)

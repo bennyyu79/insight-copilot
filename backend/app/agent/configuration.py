@@ -4,8 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, fields
 from typing import Annotated
+import os
 
-from app.agent import prompts
+from dotenv import load_dotenv
+
+from . import prompts
 from langchain_core.runnables import ensure_config
 from langgraph.config import get_config
 
@@ -23,10 +26,10 @@ class Configuration:
     )
 
     model: Annotated[str, {"__template_metadata__": {"kind": "llm"}}] = field(
-        default="openai/gpt-4o",
+        default_factory=lambda: os.getenv("OPENAILIKED_MODEL", "openai/gpt-4o"),
         metadata={
             "description": "The name of the language model to use for the agent's main interactions. "
-            "Should be in the form: provider/model-name."
+            "Should be in the form: provider/model-name. Can be overridden with OPENAILIKED_MODEL environment variable."
         },
     )
 
@@ -37,7 +40,18 @@ class Configuration:
 
     @classmethod
     def from_context(cls) -> Configuration:
-        """Create a Configuration instance from a RunnableConfig object."""
+        """Create a Configuration instance from a RunnableConfig object.
+
+        This method will also load environment variables from a .env file
+        (if present) and prefer the OPENAILIKED_MODEL environment variable
+        to override the configured model.
+        """
+        # Load .env if present so environment overrides work
+        try:
+            load_dotenv()
+        except Exception:
+            pass
+
         try:
             config = get_config()
         except RuntimeError:
@@ -45,4 +59,13 @@ class Configuration:
         config = ensure_config(config)
         configurable = config.get("configurable") or {}
         _fields = {f.name for f in fields(cls) if f.init}
-        return cls(**{k: v for k, v in configurable.items() if k in _fields})
+
+        # Start with values from runnable config
+        args = {k: v for k, v in configurable.items() if k in _fields}
+
+        # Allow environment variable to override the model
+        env_model = os.getenv("OPENAILIKED_MODEL")
+        if env_model:
+            args["model"] = env_model
+
+        return cls(**args)

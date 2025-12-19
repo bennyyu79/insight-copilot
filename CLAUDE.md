@@ -32,11 +32,16 @@ InsightCopilot is a modular, open-source Co-Pilot application built with LangGra
 - ESLint for frontend TypeScript/JavaScript
 
 ### Environment Setup
-- Copy `.env.sample` to `.env` and configure `OPENAI_API_KEY` and `LANGSMITH_API_KEY`
-- For local development, create `frontend/.env.local` with API URLs:
+- Copy `.env.sample` to `.env` and configure required API keys
+- For custom OpenAI-compatible API, set `OPENAILIKED_MODEL`, `OPENAILIKED_API_KEY`, and `OPENAILIKED_BASE_URL`
+- For standard OpenAI API, set `OPENAI_API_KEY` and optionally `LANGSMITH_API_KEY`
+- For local development, create `frontend/.env.local` with API URLs and model configuration:
   - `NEXT_PUBLIC_API_URL=http://localhost:8100`
   - `SERVER_API_URL=http://localhost:8100`
-  - `OPENAI_API_KEY=your_key_here`
+  - `OPENAI_API_KEY=your_key_here` (or use OPENAILIKED_API_KEY)
+  - `OPENAILIKED_MODEL=your_model_name` (e.g., "gpt-4o", "claude-3-sonnet")
+  - `OPENAILIKED_API_KEY=your_custom_api_key`
+  - `OPENAILIKED_BASE_URL=https://api.your-service.com/v1`
 
 ## Architecture
 
@@ -105,10 +110,18 @@ InsightCopilot is a modular, open-source Co-Pilot application built with LangGra
 - **Configuration**: Prompts and model settings in `backend/app/agent/configuration.py`
 
 ### Environment Variables
-- `OPENAI_API_KEY` - Required for AI functionality
+- `OPENAI_API_KEY` - Standard OpenAI API key (alternative to OPENAILIKED_API_KEY)
 - `LANGSMITH_API_KEY` - Optional for LangSmith tracing
+- `OPENAILIKED_MODEL` - Model name to use (e.g., "openai/gpt-4o", "anthropic/claude-3-sonnet")
+- `OPENAILIKED_API_KEY` - API key for custom OpenAI-compatible service (e.g., 硅基流动、阿里云等)
+- `OPENAILIKED_BASE_URL` - Base URL for custom OpenAI-compatible service
 - `NEXT_PUBLIC_API_URL` - Frontend client-side API calls (http://localhost:8100)
 - `SERVER_API_URL` - Server-side CopilotKit runtime calls (http://localhost:8100)
+
+**Frontend (.env.local) Variables:**
+- `OPENAILIKED_MODEL` - Frontend model override for CopilotKit direct OpenAI calls
+- `OPENAILIKED_API_KEY` - Frontend API key for custom OpenAI-compatible service
+- `OPENAILIKED_BASE_URL` - Frontend base URL for custom OpenAI-compatible service
 
 ### Code Quality Tools
 - **Python**: Ruff for linting/formatting (configured in `backend/pyproject.toml`)

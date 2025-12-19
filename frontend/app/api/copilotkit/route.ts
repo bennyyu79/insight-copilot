@@ -6,10 +6,16 @@ import {
 } from "@copilotkit/runtime";
 import OpenAI from "openai";
 
+// Use OPENAILIKED configuration if available, otherwise fall back to standard OpenAI
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAILIKED_API_KEY || process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENAILIKED_BASE_URL || undefined,
 });
-const serviceAdapter = new OpenAIAdapter({ openai });
+
+const serviceAdapter = new OpenAIAdapter({
+  openai,
+  model: process.env.OPENAILIKED_MODEL || undefined,
+});
 
 const runtime = new CopilotRuntime({
   remoteEndpoints: [

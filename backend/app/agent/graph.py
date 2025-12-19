@@ -5,10 +5,10 @@ Works with a chat model with tool calling support.
 
 from typing import Dict, List, Literal, cast
 
-from app.agent.configuration import Configuration
-from app.agent.state import AgentState, InputState, SQLAgentState
-from app.agent.tools import TOOLS
-from app.agent.utils import load_chat_model
+from .configuration import Configuration
+from .state import AgentState, InputState, SQLAgentState
+from .tools import TOOLS
+from .utils import load_chat_model
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage
 from langgraph.checkpoint.memory import MemorySaver
@@ -103,7 +103,7 @@ builder.add_edge("tools", "call_model")
 
 # Compile the builder into an executable graph
 memory = MemorySaver()
-graph = builder.compile(name="powersim_agent")
+graph = builder.compile(name="insight_copilot_agent", checkpointer=memory)
 
 if __name__ == "__main__":
     import asyncio
